@@ -42,6 +42,9 @@ public final class Settings {
     private boolean membershipGrantsTrust = true;
     private boolean safezoneIsolation = true;
     private boolean stopGhostClimb = true;
+    private boolean mobEntryExemptTamed = true;
+    private boolean mobEntryExemptLeashed = true;
+    private boolean mobEntryRemoveInside = false;
 
     private boolean sqlEnabled = false;
     private String sqlUrl = "jdbc:sqlite:plugins/uWorldGuard/regions.db";
@@ -77,6 +80,9 @@ public final class Settings {
         Membership.set(membershipGrantsTrust);
         safezoneIsolation = config.getBoolean("regions.safezone-isolation", safezoneIsolation);
         stopGhostClimb = config.getBoolean("regions.stop-ghost-climb", stopGhostClimb);
+        mobEntryExemptTamed = config.getBoolean("regions.mob-entry.exempt-tamed", mobEntryExemptTamed);
+        mobEntryExemptLeashed = config.getBoolean("regions.mob-entry.exempt-leashed", mobEntryExemptLeashed);
+        mobEntryRemoveInside = config.getBoolean("regions.mob-entry.remove-inside", mobEntryRemoveInside);
 
         sqlEnabled = config.getBoolean("storage.sql.enabled", sqlEnabled);
         sqlUrl = config.getString("storage.sql.url", sqlUrl);
@@ -100,6 +106,29 @@ public final class Settings {
 
     public boolean stopGhostClimb() {
         return stopGhostClimb;
+    }
+
+    /**
+     * Tamed pets may enter a region that denies {@code mob-entry}.
+     */
+    public boolean mobEntryExemptTamed() {
+        return mobEntryExemptTamed;
+    }
+
+    /**
+     * Mobs leashed by a player may enter a region that denies {@code mob-entry}. A mob tied to a
+     * fence is not exempt.
+     */
+    public boolean mobEntryExemptLeashed() {
+        return mobEntryExemptLeashed;
+    }
+
+    /**
+     * When true, a mob already inside a {@code mob-entry} deny is removed the next time it moves a
+     * block, and a spawn there is cancelled. When false, those mobs stay and may move inside.
+     */
+    public boolean mobEntryRemoveInside() {
+        return mobEntryRemoveInside;
     }
 
     public boolean updateCheck() {

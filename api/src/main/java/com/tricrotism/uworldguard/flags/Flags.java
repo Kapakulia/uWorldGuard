@@ -115,6 +115,17 @@ public final class Flags {
 
     // Mobs & explosions.
     public static final StateFlag MOB_SPAWNING = register(FlagCategory.MOBS, new StateFlag("mob-spawning", true));
+    /**
+     * When {@code deny}, mobs may not enter the region. Mobs already inside stay unless
+     * {@code regions.mob-entry.remove-inside} is on. {@link #MOB_ENTRY_MOBS} narrows which types
+     * the deny covers; unset, it covers every mob.
+     */
+    public static final StateFlag MOB_ENTRY = register(FlagCategory.MOBS, new StateFlag("mob-entry", true));
+    /**
+     * Entity types {@link #MOB_ENTRY} denies, when that flag is {@code deny}. Unset means every mob.
+     * A list on its own does nothing while {@code mob-entry} is allow.
+     */
+    public static final EntityTypeSetFlag MOB_ENTRY_MOBS = register(FlagCategory.MOBS, new EntityTypeSetFlag("mob-entry-mobs"));
     public static final StateFlag MOB_DAMAGE = register(FlagCategory.MOBS, new StateFlag("mob-damage", true));
     public static final StateFlag CREEPER_EXPLOSION = register(FlagCategory.MOBS, new StateFlag("creeper-explosion", true));
     public static final StateFlag OTHER_EXPLOSION = register(FlagCategory.MOBS, new StateFlag("other-explosion", true));
