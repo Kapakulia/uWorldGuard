@@ -48,6 +48,7 @@ public final class UWorldGuard extends com.sk89q.worldguard.bukkit.WorldGuardPlu
     private @Nullable RegionContainerImpl container;
     private @Nullable Settings settings;
     private @Nullable MovementListener movement;
+    private @Nullable MobEntryListener mobEntry;
     private @Nullable CollisionService collision;
     private @Nullable WorldEditFlagGuard worldEditGuard;
     private @Nullable RegionStore store;
@@ -223,6 +224,10 @@ public final class UWorldGuard extends com.sk89q.worldguard.bukkit.WorldGuardPlu
         final MovementListener movement = new MovementListener(this, query, messages, collision, pearls, chatTags, restores, playerTick, settings);
         this.movement = movement;
         getServer().getPluginManager().registerEvents(movement, this);
+        final MobEntryListener mobEntry = new MobEntryListener(this, regionContainer, query, settings);
+        this.mobEntry = mobEntry;
+        getServer().getPluginManager().registerEvents(mobEntry, this);
+        mobEntry.start();
         getServer().getPluginManager().registerEvents(new NaturalListener(query), this);
         getServer().getPluginManager().registerEvents(new CropTrampleListener(query), this);
         getServer().getPluginManager().registerEvents(new EntityListener(regionContainer, query), this);
@@ -487,6 +492,10 @@ public final class UWorldGuard extends com.sk89q.worldguard.bukkit.WorldGuardPlu
         }
         if (movement != null) {
             movement.stop();
+        }
+        if (mobEntry != null) {
+            mobEntry.shutdown();
+            mobEntry = null;
         }
         if (flagLifecycle != null) {
             flagLifecycle.uninstall();

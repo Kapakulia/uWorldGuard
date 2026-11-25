@@ -141,6 +141,19 @@ regions:
     #        so the block their client briefly shows cannot be used to climb on air.
     # false: the block is refused but the player keeps whatever height the client gave them.
     stop-ghost-climb: true
+    # mob-entry deny. Nothing here is read until a region sets that flag.
+    mob-entry:
+        # Tamed pets (wolves, cats, horses, parrots, and anything else that counts as tamed)
+        # may walk into a region that denies mob-entry.
+        exempt-tamed: true
+        # A mob a player is leading may follow them in. A mob tied to a fence is still blocked.
+        exempt-leashed: true
+        # false: mobs that spawn inside, or that were already inside when the flag was set, stay.
+        #        They may move around inside. A mob that leaves cannot come back. Spawns are still
+        #        governed by mob-spawning and deny-spawn.
+        # true:  the next time such a mob moves a block it is removed, and a spawn inside is
+        #        cancelled. Nothing scans the world, so a mob that never moves stays until it does.
+        remove-inside: false
 
 # Version uWorldGuard reports to other plugins. Some plugins (BetonQuest, PvPManager, ...) only hook
 # into WorldGuard 7+, so by default uWorldGuard reports the WorldGuard version it emulates.

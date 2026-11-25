@@ -258,12 +258,12 @@ have PAPI installed — useful for gating on a level from another plugin.
 </details>
 
 <details>
-<summary><b>Mobs &amp; explosions</b> (22 flags)</summary>
+<summary><b>Mobs &amp; explosions</b> (24 flags)</summary>
 
-`mob-spawning` · `deny-spawn` · `allow-entity-damage` · `mob-damage` · `creeper-explosion` · `other-explosion` ·
-`enderman-grief` · `ghast-fireball` · `wither-damage` · `enderdragon-block-damage` ·
-`ravager-grief` · `snowman-trails` · `breeze-charge-explosion` · `lightning` · `mob-drops` ·
-`exp-drops` · `raid` · `entity-transform` · `breed` · `tame` · `door-break` · `copper-golem`
+`mob-spawning` · `mob-entry` · `mob-entry-mobs` · `deny-spawn` · `allow-entity-damage` · `mob-damage` ·
+`creeper-explosion` · `other-explosion` · `enderman-grief` · `ghast-fireball` · `wither-damage` ·
+`enderdragon-block-damage` · `ravager-grief` · `snowman-trails` · `breeze-charge-explosion` · `lightning` ·
+`mob-drops` · `exp-drops` · `raid` · `entity-transform` · `breed` · `tame` · `door-break` · `copper-golem`
 
 `raid` stops raids starting — usually the one flag a spawn town wants. `copper-golem` gates
 building one (26.x); player-built golems are outside `mob-spawning` by design.
@@ -271,6 +271,31 @@ building one (26.x); player-built golems are outside `mob-spawning` by design.
 `mob-spawning` is a blanket toggle over *natural* spawns. `deny-spawn` is a list of entity types
 that may never appear, whatever put them there — spawn egg, spawner, or another plugin:
 `/wg flag spawn deny-spawn CREEPER,minecraft:phantom`.
+
+`mob-entry deny` stops mobs entering the region. Walking, pathing, knockback and teleport are
+turned around at the border, and a mob that targets or paths toward something inside gives that
+up. A mob reeled in on a fishing rod is stopped the same way. Mobs that spawn inside, or that
+were already inside when the flag was set, stay and may move around in that denied area — a mob
+that leaves cannot come back. Set `regions.mob-entry.remove-inside: true` to remove those the
+next time they move a block, and to cancel spawns inside. Nothing scans the world either way, so
+a mob that never moves stays put until it does. The global region has no outside, so a deny on
+`__global__` does not push mobs; `remove-inside` still clears ones that move or spawn.
+
+`mob-entry-mobs` narrows a deny to entity types. Leave it unset to block every mob:
+
+```
+/wg flag spawn mob-entry deny
+/wg flag spawn mob-entry-mobs ZOMBIE,SKELETON,CREEPER
+```
+
+The list does nothing while `mob-entry` is allow. A mob already standing where it is denied can
+keep moving there, including into a child region that only inherits the flag. Crossing into a
+neighbouring region that sets its own deny is refused.
+
+Players, armor stands, mannequins, item frames, projectiles, and any vehicle a player is riding
+are never affected. Tamed pets and mobs leashed by a player may enter unless
+`regions.mob-entry.exempt-tamed` or `exempt-leashed` is set to false. A mob tied to a fence is
+not exempt.
 
 `allow-entity-damage` is a list of entity types anyone may hit, even where they can't build and
 `damage-animals` is denied: `/wg flag spawn allow-entity-damage BAT,COD`.
